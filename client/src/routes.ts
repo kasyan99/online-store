@@ -11,7 +11,7 @@ import {
   LOGIN_ROUTE,
   REGISTRATION_ROUTE,
   SHOP_ROUTE,
-} from "./utils/consts"
+} from "./utils/routesConsts"
 
 export type RoutType = {
   path: string

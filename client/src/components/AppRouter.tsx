@@ -1,6 +1,8 @@
+import { useContext } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
+import { Context } from '..'
 import { authRoutes, publicRoutes, RoutType } from '../routes'
-import { SHOP_ROUTE } from '../utils/consts'
+import { SHOP_ROUTE } from '../utils/routesConsts'
 
 const AppRoutes = (routes: RoutType[]) => (
    routes.map(({ path, Component }) => (
@@ -10,10 +12,12 @@ const AppRoutes = (routes: RoutType[]) => (
 
 
 const AppRouter: React.FC = () => {
-   const isAuth = true
+   const { user } = useContext(Context)
+   console.log(user);
+
    return (
       <Routes>
-         {isAuth && AppRoutes(authRoutes)}
+         {user.isAuth && AppRoutes(authRoutes)}
          {AppRoutes(publicRoutes)}
          <Route
             path='/*'
