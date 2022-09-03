@@ -14,13 +14,14 @@ import { observer } from 'mobx-react-lite';
 import { Link, useLocation } from 'react-router-dom';
 import { Badge, Button, Container } from '@material-ui/core';
 import { preventDefault } from '../utils/preventDefault';
-import { LOGIN_ROUTE, REGISTRATION_ROUTE } from '../utils/routesConsts';
+import { LOGIN_ROUTE, REGISTRATION_ROUTE, SHOP_ROUTE } from '../utils/routesConsts';
 import NavLink from './NavLink';
 
 const useStyles = makeStyles((theme: Theme) =>
    createStyles({
       root: {
          flexGrow: 1,
+         marginBottom: '24px'
       },
       menuButton: {
          marginRight: theme.spacing(2),
@@ -61,7 +62,7 @@ const NavBar = observer(() => {
                   <MenuIcon />
                </IconButton> */}
                <Typography variant="h6" className={classes.title} >
-                  <Link to='/'>Online-store</Link>
+                  <Link to={SHOP_ROUTE}>Online Store</Link>
                </Typography>
 
                {auth && (

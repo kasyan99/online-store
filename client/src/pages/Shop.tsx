@@ -8,7 +8,6 @@ const useStyles = makeStyles(() =>
    createStyles({
       root: {
          flexGrow: 1,
-         paddingTop: '3%'
       }
    }),
 );

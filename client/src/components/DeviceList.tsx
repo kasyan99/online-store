@@ -5,6 +5,7 @@ import { debounce } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
 import StarRateIcon from '@material-ui/icons/StarRate';
 import { useNavigate } from "react-router-dom";
+import { DEVICE_ROUTE } from "../utils/routesConsts";
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -57,7 +58,7 @@ const DeviceList = observer(() => {
    }
    return <Grid container spacing={3}>
       {device.devices.map(device => {
-         return <Grid item xs={calcGridSize(winWidth)} key={device.id + Date.now()} onClick={() => navigate(`/device/${device.id}`)}>
+         return <Grid item xs={calcGridSize(winWidth)} key={device.id + Date.now()} onClick={() => navigate(DEVICE_ROUTE + '/' + device.id)}>
             <Card className={classes.card}>
                <CardActionArea>
                   <CardMedia
