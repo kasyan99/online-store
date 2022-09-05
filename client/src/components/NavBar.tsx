@@ -4,17 +4,15 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import { Context } from '..';
 import { observer } from 'mobx-react-lite';
-import { Link, useLocation } from 'react-router-dom';
-import { Badge, Button, Container } from '@material-ui/core';
-import { preventDefault } from '../utils/preventDefault';
-import { LOGIN_ROUTE, REGISTRATION_ROUTE, SHOP_ROUTE } from '../utils/routesConsts';
+import { Link } from 'react-router-dom';
+import { Badge, Button } from '@material-ui/core';
+import { LOGIN_ROUTE, SHOP_ROUTE } from '../utils/routesConsts';
 import NavLink from './NavLink';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -39,8 +37,8 @@ const useStyles = makeStyles((theme: Theme) =>
 const NavBar = observer(() => {
    const { user } = useContext(Context)
    const classes = useStyles();
-   // const [auth, setAuth] = React.useState(true);
-   const [auth, setAuth] = React.useState(user.isAuth);
+   const [auth, setAuth] = React.useState(true);
+   // const [auth, setAuth] = React.useState(user.isAuth);
    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
    const open = Boolean(anchorEl);
 

@@ -1,4 +1,4 @@
-import { Grid, makeStyles, createStyles, Theme, GridSize, Card, CardActionArea, CardMedia, Typography, CardContent, Button } from "@material-ui/core"
+import { Grid, makeStyles, createStyles, Theme, Card, Typography, Button } from "@material-ui/core"
 import { IDevice } from "../models/models"
 import StarRateIcon from '@material-ui/icons/StarRate';
 
@@ -54,7 +54,7 @@ const DevicePage: React.FC = () => {
                </Grid>
                <Grid item xs={3} style={{ paddingLeft: 25, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'flex-start' }} >
                   <div>
-                     <Typography component='h2' variant="h3">{device.name}</Typography>
+                     <Typography component='h3' variant="h3">{device.name}</Typography>
                      <Typography component='p' style={{ fontSize: 24, marginTop: 10, display: 'flex', alignItems: 'center' }}>Rating: {device.rating}<StarRateIcon style={{ color: '#fc9512' }} /></Typography>
                      <Typography component='p' style={{ fontSize: 24, marginTop: 10 }}>Price: <b>{device.price}$</b></Typography>
                   </div>
@@ -62,6 +62,7 @@ const DevicePage: React.FC = () => {
                </Grid>
             </Grid>
          </Card>
+         <Typography style={{ marginTop: 25 }} component="h2" variant="h3">Characteristic</Typography>
          <Card style={{ marginTop: 25 }}>
             {description.map(info => (
                <Typography className={classes.descrItem}>{info.title}: {info.descriptiop}</Typography>
