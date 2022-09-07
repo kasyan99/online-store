@@ -1,6 +1,7 @@
 import { Button, createStyles, makeStyles, TextField, Theme } from "@material-ui/core"
 import React from 'react';
 import Modal from '@material-ui/core/Modal';
+import { IBrand, IDevice, IType } from "../../models/models";
 
 
 //you need to add position relative for parent element 
@@ -19,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 type Props = {
    modalName: string,
-   children: JSX.Element
+   children: JSX.Element,
 }
 const ModalContainer: React.FC<Props> = ({ modalName, children }) => {
    const classes = useStyles()
@@ -39,7 +40,8 @@ const ModalContainer: React.FC<Props> = ({ modalName, children }) => {
          <h2 id="simple-modal-title">{modalName}</h2>
          {children}
          <div style={{ textAlign: 'right' }}>
-            <Button variant='contained' color="primary" style={{ background: 'green' }}>Create</Button>
+            <Button variant='contained' color="primary" style={{ background: 'green' }} onClick={() => console.log()
+            }>Create</Button>
          </div>
       </div>
    )

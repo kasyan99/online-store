@@ -75,7 +75,7 @@ const NavBar = observer(() => {
                {auth && (
                   <div>
                      <IconButton >
-                        <Badge badgeContent={4} color="secondary">
+                        <Badge badgeContent={4} color="secondary" overlap="rectangular">
                            <ShoppingCartIcon style={{ color: 'white' }} />
                         </Badge>
                      </IconButton>

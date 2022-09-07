@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import List from '@material-ui/core/List';
@@ -6,6 +6,7 @@ import { Paper } from '@material-ui/core';
 import CategoryList from './CaterogyList';
 import { Context } from '..';
 import { observer } from 'mobx-react-lite';
+import { deviceAPI } from '../api/deviceAPI';
 
 const useStyles = makeStyles((theme: Theme) =>
    createStyles({
@@ -20,6 +21,11 @@ const FilterSection: React.FC = observer(() => {
    const classes = useStyles();
 
    const { device } = useContext(Context)
+
+   useEffect(() => {
+      deviceAPI.getTypes().then(types => device.setTypes(types))
+      deviceAPI.getBrands().then(brands => device.setBrands(brands))
+   }, [device])
 
    return (
       <Paper style={{ borderRadius: '5px' }}>

@@ -17,14 +17,12 @@ export const userAPI = {
       email,
       password,
     })
-    console.log("data", data)
     localStorage.setItem("token", data)
     return jwtDecode(data)
   },
 
   async check() {
     const { data } = await $authHost.get("api/user/auth")
-    console.log("ckec", data.token)
 
     localStorage.setItem("token", data.token)
 

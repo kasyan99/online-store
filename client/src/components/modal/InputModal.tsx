@@ -26,7 +26,7 @@ const InputModal: React.FC<Props> = ({ label }) => {
 
    return <>
       <FormControl variant="outlined" className={classes.formControl} fullWidth>
-         <TextField id={label} label={label} variant="outlined" onChange={handleChange} />
+         <TextField id={label} label={label} variant="outlined" value={value} onChange={handleChange} />
       </FormControl>
    </>
 }

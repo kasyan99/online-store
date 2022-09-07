@@ -6,6 +6,7 @@ import { observer } from 'mobx-react-lite';
 import StarRateIcon from '@material-ui/icons/StarRate';
 import { useNavigate } from "react-router-dom";
 import { DEVICE_ROUTE } from "../utils/routesConsts";
+import { deviceAPI } from "../api/deviceAPI";
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -42,6 +43,10 @@ const DeviceList = observer(() => {
       )
    }, [])
 
+   useEffect(() => {
+      deviceAPI.getDevices().then(devices => device.setDevices(devices.rows))
+   }, [device])
+
    //grid items columns depend on window width
    const calcGridSize = (winWidth: number) => {
       let gridSize: GridSize
@@ -63,7 +68,7 @@ const DeviceList = observer(() => {
                <CardActionArea>
                   <CardMedia
                      className={classes.media}
-                     image="https://klike.net/uploads/posts/2020-07/1594278030_1.jpg"
+                     image={process.env.REACT_APP_API_URL + device.img}
                      title="Contemplative Reptile"
                   />
                   <CardContent>

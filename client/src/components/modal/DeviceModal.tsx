@@ -5,7 +5,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import ModalContainer from './ModalContainer';
-import { Context } from '..';
+import { Context } from '../..';
 import InputModal from './InputModal';
 import { Button, TextField } from '@material-ui/core';
 import { InputFiles } from 'typescript';
