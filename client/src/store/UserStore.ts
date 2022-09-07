@@ -3,7 +3,7 @@ import { IUser } from "../models/models"
 
 export default class UserStore {
   private _isAuth: boolean
-  private _user: IUser
+  private _user: IUser | {} | unknown
 
   constructor() {
     this._isAuth = false
@@ -15,7 +15,7 @@ export default class UserStore {
     this._isAuth = bool
   }
 
-  setUser(user: IUser) {
+  setUser(user: IUser | {} | unknown) {
     this._user = user
   }
 

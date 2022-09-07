@@ -13,12 +13,11 @@ const AppRoutes = (routes: RoutType[]) => (
 
 const AppRouter: React.FC = () => {
    const { user } = useContext(Context)
-   console.log(user);
 
    return (
       <Routes>
-         {true && AppRoutes(authRoutes)}
-         {/* {user.isAuth && AppRoutes(authRoutes)} */}
+         {/* {true && AppRoutes(authRoutes)} */}
+         {user.isAuth && AppRoutes(authRoutes)}
          {AppRoutes(publicRoutes)}
          <Route
             path='/*'
