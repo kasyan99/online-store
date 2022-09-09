@@ -45,10 +45,20 @@ const DeviceList = observer(() => {
    }, [])
 
    useEffect(() => {
-      deviceAPI.getDevices().then(devices => {
-         device.setDevices(devices.rows)
+      deviceAPI.getDevices(null, null, 2, 3).then(data => {
+         device.setDevices(data.rows)
+         device.setTotalCount(data.count)
       })
    }, [device])
+
+   useEffect(() => {
+      deviceAPI.getDevices(device.selectedType?.id, device.selectedBrand?.id, device.page, device.limit).then(data => {
+         device.setDevices(data.rows)
+         device.setTotalCount(data.count)
+      })
+   }, [device, device.page, device.limit, device.selectedType, device.selectedBrand])
+
+   const pageCount = Math.ceil(device.totalCount / device.limit)
 
    //grid items columns depend on window width
    const calcGridSize = (winWidth: number) => {
@@ -65,9 +75,8 @@ const DeviceList = observer(() => {
       return gridSize
    }
 
-   const [page, setPage] = useState(1)
    const handleChange = (page: number) => {
-      setPage(page)
+      device.setPage(page)
    }
 
    return <>
@@ -102,8 +111,8 @@ const DeviceList = observer(() => {
       </Grid>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
          <Pagination
-            count={10}
-            page={page}
+            count={pageCount}
+            page={device.page}
             onChange={(e: ChangeEvent<unknown>, page: number) => handleChange(page)}
 
             variant="outlined"

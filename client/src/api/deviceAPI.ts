@@ -27,8 +27,20 @@ export const deviceAPI = {
     return data
   },
 
-  async getDevices() {
-    const { data } = await $host.get("api/device")
+  async getDevices(
+    typeId = null as number | null,
+    brandId = null as number | null,
+    page = 1,
+    limit = 5
+  ) {
+    const { data } = await $host.get("api/device", {
+      params: {
+        typeId,
+        brandId,
+        page,
+        limit,
+      },
+    })
     return data
   },
 
