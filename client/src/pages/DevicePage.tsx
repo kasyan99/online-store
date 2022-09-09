@@ -1,5 +1,4 @@
 import { Grid, makeStyles, createStyles, Theme, Card, Typography, Button } from "@material-ui/core"
-import { IDevice } from "../models/models"
 import StarRateIcon from '@material-ui/icons/StarRate';
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -28,24 +27,17 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const DevicePage: React.FC = () => {
    const classes = useStyles()
-   const [device, setDevice] = useState<IDevice | null>(null)
+   const [device, setDevice] = useState<any>({ info: [] })
 
    const params = useParams()
-   // const device: IDevice = {
-   //    id: 1,
-   //    name: "Galaxy A5",
-   //    price: 2500,
-   //    rating: 5,
-   //    img: "https://content.rozetka.com.ua/goods/images/big/166282045.jpg",
-   // }
 
-   const description = [
-      { id: 1, title: 'Memory', descriptiop: '5 gb' },
-      { id: 2, title: 'Camera', descriptiop: '12 mp' },
-      { id: 3, title: 'Proccesor', descriptiop: 'Petiym 3' },
-      { id: 4, title: 'I count', descriptiop: '8' },
-      { id: 5, title: 'Accumulator', descriptiop: '30000' },
-   ]
+   // const description = [
+   //    { id: 1, title: 'Memory', descriptiop: '5 gb' },
+   //    { id: 2, title: 'Camera', descriptiop: '12 mp' },
+   //    { id: 3, title: 'Proccesor', descriptiop: 'Petiym 3' },
+   //    { id: 4, title: 'I count', descriptiop: '8' },
+   //    { id: 5, title: 'Accumulator', descriptiop: '30000' },
+   // ]
 
    useEffect(() => {
       if (params.id) {
@@ -76,8 +68,8 @@ const DevicePage: React.FC = () => {
          </Card>
          <Typography style={{ marginTop: 25 }} component="h2" variant="h3">Characteristic</Typography>
          <Card style={{ marginTop: 25 }}>
-            {description.map(info => (
-               <Typography className={classes.descrItem} key={Date.now() + Math.random()}>{info.title}: {info.descriptiop}</Typography>
+            {device.info.map((info: any) => (
+               <Typography className={classes.descrItem} key={Date.now() + Math.random()}>{info.title}: {info.description}</Typography>
             ))}
          </Card>
       </>

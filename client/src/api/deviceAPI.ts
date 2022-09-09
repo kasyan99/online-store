@@ -2,7 +2,7 @@ import { $authHost, $host } from "."
 import { IBrand, IDevice, IType } from "../models/models"
 
 export const deviceAPI = {
-  async createType(type: IType) {
+  async createType(type: { name: string }) {
     const { data } = await $authHost.post("api/type", type)
     return data
   },
@@ -12,7 +12,7 @@ export const deviceAPI = {
     return data
   },
 
-  async createBrand(brand: IBrand) {
+  async createBrand(brand: { name: string }) {
     const { data } = await $authHost.post("api/brand", brand)
     return data
   },
@@ -22,7 +22,7 @@ export const deviceAPI = {
     return data
   },
 
-  async createDevice(device: IDevice) {
+  async createDevice(device: FormData) {
     const { data } = await $authHost.post("api/device", device)
     return data
   },

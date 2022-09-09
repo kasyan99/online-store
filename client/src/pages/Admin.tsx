@@ -1,8 +1,9 @@
-import { Button, createStyles, makeStyles, Theme } from "@material-ui/core"
+import { createStyles, makeStyles, Theme } from "@material-ui/core"
 import React from 'react';
-import DeviceModal from "../components/modal/DeviceModal";
-import InputModal from "../components/modal/InputModal";
-import ModalContainer from "../components/modal/ModalContainer";
+import BrandForm from "../components/adminModal/BrandForm";
+import DeviceForm from "../components/adminModal/DeviceForm";
+import ModalContainer from "../components/adminModal/ModalContainer";
+import TypeForm from "../components/adminModal/TypeForm";
 
 const useStyles = makeStyles((theme: Theme) =>
    createStyles({
@@ -15,17 +16,20 @@ const useStyles = makeStyles((theme: Theme) =>
    }),
 )
 
+
 const Admin: React.FC = () => {
    const classes = useStyles()
    return (
       <div className={classes.root}>
-         <ModalContainer modalName="Add Type">
-            <InputModal label="Type" />
-         </ModalContainer>
          <ModalContainer modalName="Add Type" >
-            <InputModal label="Brand" />
+            <TypeForm />
          </ModalContainer>
-         <DeviceModal />
+         <ModalContainer modalName="Add Brand" >
+            <BrandForm />
+         </ModalContainer>
+         <ModalContainer modalName="Add Device" >
+            <DeviceForm />
+         </ModalContainer>
       </div>
    )
 }

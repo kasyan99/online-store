@@ -1,7 +1,6 @@
-import { Button, createStyles, makeStyles, TextField, Theme } from "@material-ui/core"
+import { Button, createStyles, makeStyles, Theme } from "@material-ui/core"
 import React from 'react';
 import Modal from '@material-ui/core/Modal';
-import { IBrand, IDevice, IType } from "../../models/models";
 
 
 //you need to add position relative for parent element 
@@ -22,6 +21,7 @@ type Props = {
    modalName: string,
    children: JSX.Element,
 }
+
 const ModalContainer: React.FC<Props> = ({ modalName, children }) => {
    const classes = useStyles()
 
@@ -29,22 +29,18 @@ const ModalContainer: React.FC<Props> = ({ modalName, children }) => {
 
    const handleOpen = () => {
       setOpen(true);
-   };
+   }
 
    const handleClose = () => {
       setOpen(false);
-   };
+   }
 
-   const body = (
-      <div style={{ left: '50%', top: "10%", transform: 'translate(-50%)' }} className={classes.paper}>
-         <h2 id="simple-modal-title">{modalName}</h2>
-         {children}
-         <div style={{ textAlign: 'right' }}>
-            <Button variant='contained' color="primary" style={{ background: 'green' }} onClick={() => console.log()
-            }>Create</Button>
-         </div>
-      </div>
-   )
+   //create props for children
+   const childrenProps = {
+      closeModal: handleClose
+   }
+   //clone children and put props into it
+   const childrenWithProps = React.cloneElement(children, childrenProps)
 
    return (
       <>
@@ -53,8 +49,12 @@ const ModalContainer: React.FC<Props> = ({ modalName, children }) => {
             open={open}
             onClose={handleClose}
             aria-labelledby="simple-modal-title"
+            style={{ overflowY: 'auto' }}
          >
-            {body}
+            <div style={{ left: '50%', top: "10%", transform: 'translate(-50%)' }} className={classes.paper}>
+               <h2 id="simple-modal-title">{modalName}</h2>
+               {childrenWithProps}
+            </div>
          </Modal>
       </>
    )

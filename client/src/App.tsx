@@ -1,7 +1,7 @@
 import { BrowserRouter } from 'react-router-dom';
 import AppRouter from './components/AppRouter';
 import NavBar from './components/NavBar';
-import { CircularProgress, Container, LinearProgress } from '@material-ui/core';
+import { Container, LinearProgress } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
 import { Context } from '.';
 import { useContext, useEffect, useState } from 'react';
@@ -16,7 +16,7 @@ const App = observer(() => {
       user.setUser(true)
       user.setIsAuth(true)
     }).finally(() => setLoading(false))
-  }, [])
+  }, [user])
 
   if (loading) {
     return <LinearProgress style={{ marginTop: '3%' }} />
