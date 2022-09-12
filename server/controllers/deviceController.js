@@ -14,7 +14,6 @@ class DeviceController {
 
          if (info) {
             info = JSON.parse(info)
-            console.log('INFO', info);
             info.forEach(i => {
                DeviceInfo.create({
                   title: i.title,

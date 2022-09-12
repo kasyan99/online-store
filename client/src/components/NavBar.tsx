@@ -12,7 +12,7 @@ import { Context } from '..';
 import { observer } from 'mobx-react-lite';
 import { Link, useNavigate } from 'react-router-dom';
 import { Badge, Button } from '@material-ui/core';
-import { LOGIN_ROUTE, SHOP_ROUTE } from '../utils/routesConsts';
+import { ADMIN_ROUTE, LOGIN_ROUTE, SHOP_ROUTE } from '../utils/routesConsts';
 import NavLink from './NavLink';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -43,7 +43,7 @@ const NavBar = observer(() => {
    const navigate = useNavigate()
 
    const logOut = () => {
-      user.setUser({})
+      user.setUser(null)
       user.setIsAuth(false)
       handleClose()
       navigate(LOGIN_ROUTE, { replace: true })
@@ -74,6 +74,11 @@ const NavBar = observer(() => {
 
                {auth && (
                   <div>
+                     {user.user?.role === 'ADMIN' &&
+                        <Button variant='contained' style={{ cursor: 'pointer' }}>
+                           <Link to={ADMIN_ROUTE} style={{ textDecoration: 'none', color: 'black' }}>Admin</Link>
+                        </Button>
+                     }
                      <IconButton >
                         <Badge badgeContent={4} color="secondary" overlap="rectangular">
                            <ShoppingCartIcon style={{ color: 'white' }} />

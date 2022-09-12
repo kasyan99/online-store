@@ -1,5 +1,6 @@
 import jwtDecode from "jwt-decode"
 import { $authHost, $host } from "."
+import { IUser } from "../models/models"
 
 export const userAPI = {
   async registration(email: string, password: string) {
@@ -8,8 +9,10 @@ export const userAPI = {
       password,
       role: "ADMIN",
     })
+
     localStorage.setItem("token", data)
-    return jwtDecode(data)
+
+    return jwtDecode<IUser>(data)
   },
 
   async login(email: string, password: string) {
@@ -18,14 +21,15 @@ export const userAPI = {
       password,
     })
     localStorage.setItem("token", data)
-    return jwtDecode(data)
+    return jwtDecode<IUser>(data)
   },
 
   async check() {
     const { data } = await $authHost.get("api/user/auth")
 
     localStorage.setItem("token", data.token)
+    const res: IUser = jwtDecode(data.token)
 
-    return jwtDecode(data.token)
+    return res
   },
 }

@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
+import { Grid, GridSize } from '@material-ui/core';
 import DeviceList from '../components/DeviceList';
 import FilterSection from '../components/FilterSection';
+import useWinWidth from '../hooks/useWinWidth';
 
 const useStyles = makeStyles(() =>
    createStyles({
@@ -15,21 +16,49 @@ const useStyles = makeStyles(() =>
 
 const Shop: React.FC = () => {
    const classes = useStyles();
+   const winWidth = useWinWidth()
 
-   return (
-      <Grid container className={classes.root} spacing={3}>
-         <Grid item xs={3} >
-            <aside >
+   let [asideXS, setAsideXS] = useState<GridSize>(3)
+   let [mainXS, setMainXS] = useState<GridSize>(9)
+
+   useEffect(() => {
+      if (winWidth > 860) {
+         setAsideXS(3)
+         setMainXS(9)
+      }
+      if (winWidth < 860 && winWidth > 500) {
+         setAsideXS(4)
+         setMainXS(8)
+      }
+   }, [winWidth])
+
+   return (<>
+      {winWidth >= 600 &&
+         <Grid container className={classes.root} spacing={3}>
+            <Grid item xs={asideXS} >
+               <aside >
+                  <FilterSection />
+               </aside>
+            </Grid>
+            <Grid item xs={mainXS}>
+               <main>
+                  <DeviceList />
+               </main>
+            </Grid>
+
+         </Grid>}
+      {winWidth < 600 &&
+         <>
+            <aside style={{ marginBottom: '3%' }}>
                <FilterSection />
             </aside>
-         </Grid>
-         <Grid item xs={9}>
-            <main>
+            <main style={{ marginBottom: '3%' }}>
                <DeviceList />
             </main>
-         </Grid>
+         </>
+      }
+   </>
 
-      </Grid>
    )
 }
 

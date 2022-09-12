@@ -1,25 +1,40 @@
 import { Grid, makeStyles, createStyles, Theme, GridSize, Card, CardActionArea, CardMedia, Typography, CardContent, } from "@material-ui/core"
 import { Pagination } from '@material-ui/lab';
-import { ChangeEvent, useContext, useEffect, useState } from 'react';
+import { ChangeEvent, useContext, useEffect } from 'react';
 import { Context } from '..';
-import { debounce } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
 import StarRateIcon from '@material-ui/icons/StarRate';
 import { useNavigate } from "react-router-dom";
 import { DEVICE_ROUTE } from "../utils/routesConsts";
 import { deviceAPI } from "../api/deviceAPI";
+import useWinWidth from "../hooks/useWinWidth";
 
 
 const useStyles = makeStyles((theme: Theme) =>
    createStyles({
+      item: {
+      },
       card: {
-         // padding: theme.spacing(2),
          textAlign: 'center',
          color: theme.palette.text.secondary,
-         height: '230px'
+         width: '100%',
+         height: 230,
+         '@media(max-width: 800px)': {
+            height: 430,
+         }
       },
       media: {
-         height: 140
+         width: '100%',
+         height: '70%',
+         '&img': {
+            width: '100%',
+            height: '100%',
+            objectFit: 'contain'
+         }
+         ,
+         '@media(max-width: 800px)': {
+            height: '90%',
+         }
       },
       flexArea: {
          display: 'flex',
@@ -31,18 +46,18 @@ const useStyles = makeStyles((theme: Theme) =>
 const DeviceList = observer(() => {
    const classes = useStyles();
    const { device } = useContext(Context)
-   let [winWidth, setWinWidth] = useState(document.documentElement.scrollWidth)
+   // let [winWidth, setWinWidth] = useState(document.documentElement.scrollWidth)
 
    const navigate = useNavigate()
 
    //use debounce to avoid a lot of rerenders
-   useEffect(() => {
-      window.addEventListener('resize',
-         debounce(() => {
-            setWinWidth(document.documentElement.scrollWidth)
-         }, 300)
-      )
-   }, [])
+   // useEffect(() => {
+   //    window.addEventListener('resize',
+   //       debounce(() => {
+   //          setWinWidth(document.documentElement.scrollWidth)
+   //       }, 300)
+   //    )
+   // }, [])
 
    useEffect(() => {
       deviceAPI.getDevices(null, null, 2, 3).then(data => {
@@ -60,14 +75,17 @@ const DeviceList = observer(() => {
 
    const pageCount = Math.ceil(device.totalCount / device.limit)
 
+   //get window width
+   const winWidth = useWinWidth()
+
    //grid items columns depend on window width
    const calcGridSize = (winWidth: number) => {
       let gridSize: GridSize
       if (winWidth > 1200) {
          gridSize = 3
-      } else if (winWidth < 1200 && winWidth > 800) {
+      } else if (winWidth < 1200 && winWidth >= 930) {
          gridSize = 4
-      } else if (winWidth < 800 && winWidth > 600) {
+      } else if (winWidth < 930 && winWidth >= 800) {
          gridSize = 6
       } else {
          gridSize = 12
@@ -82,9 +100,14 @@ const DeviceList = observer(() => {
    return <>
       <Grid container spacing={3} style={{ paddingBottom: '3%' }}>
          {device.devices.map(device => {
-            return <Grid item xs={calcGridSize(winWidth)} key={device.id + Date.now()} onClick={() => navigate(DEVICE_ROUTE + '/' + device.id)}>
+            return <Grid item
+               xs={calcGridSize(winWidth)}
+               key={device.id + Date.now()}
+               onClick={() => navigate(DEVICE_ROUTE + '/' + device.id)}
+               className={classes.item}
+            >
                <Card className={classes.card}>
-                  <CardActionArea>
+                  <CardActionArea style={{ height: "100%", display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'stretch' }}>
                      <CardMedia
                         className={classes.media}
                         image={process.env.REACT_APP_API_URL + device.img}

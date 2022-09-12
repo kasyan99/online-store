@@ -2,7 +2,6 @@ import { Button, createStyles, makeStyles, Theme } from "@material-ui/core"
 import React from 'react';
 import Modal from '@material-ui/core/Modal';
 
-
 //you need to add position relative for parent element 
 const useStyles = makeStyles((theme: Theme) =>
    createStyles({
@@ -13,6 +12,9 @@ const useStyles = makeStyles((theme: Theme) =>
          border: '2px solid #000',
          boxShadow: theme.shadows[5],
          padding: theme.spacing(2, 4, 3),
+         '@media(max-width: 530px)': {
+            width: '70vw',
+         }
       }
    }),
 )

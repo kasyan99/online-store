@@ -16,10 +16,20 @@ export interface IBrand {
   name: string
 }
 
+type DeviceInfo = {
+  id: number
+  deviceId: number
+  description: string
+  title: string
+}
+
 export interface IDevice {
   id: number
   name: string
   price: number
   rating: number
   img: string
+  brandId: number
+  typeId: number
+  info: Array<DeviceInfo>
 }

@@ -1,5 +1,4 @@
 import { $authHost, $host } from "."
-import { IBrand, IDevice, IType } from "../models/models"
 
 export const deviceAPI = {
   async createType(type: { name: string }) {

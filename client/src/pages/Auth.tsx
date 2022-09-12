@@ -13,6 +13,7 @@ import { ChangeEvent, useContext, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Context } from '..';
 import { AxiosError } from 'axios';
+import { IUser } from '../models/models';
 
 const useStyles = makeStyles({
    root: {
@@ -25,6 +26,11 @@ const useStyles = makeStyles({
    },
    formControll: {
       marginBottom: '3%'
+   },
+   text: {
+      '@media(max-width: 500px)': {
+         display: 'none'
+      }
    }
 });
 
@@ -41,7 +47,8 @@ const Auth = observer(() => {
    const onClick = async () => {
 
       try {
-         let data: any
+         let data: IUser
+
          if (onRegistr) {
             data = await userAPI.registration(email, password)
          } else {
@@ -82,7 +89,7 @@ const Auth = observer(() => {
             </CardContent>
             <CardActions className={classes.noPadding} style={{ display: 'flex', justifyContent: 'space-between' }}>
                <span>
-                  {onRegistr ? 'Do you have account?' : 'Do not you have account?'} <NavLink to={onRegistr ? LOGIN_ROUTE : REGISTRATION_ROUTE}>{onRegistr ? 'Sign in' : 'Registration'}</NavLink>
+                  <span className={classes.text}>{onRegistr ? 'Do you have account?' : 'Do not you have account?'}</span> <NavLink to={onRegistr ? LOGIN_ROUTE : REGISTRATION_ROUTE}>{onRegistr ? 'Sign in' : 'Registration'}</NavLink>
                </span>
 
                <Button variant="contained" color='primary' onClick={onClick}>{onRegistr ? 'Sign up' : 'Sign in'}</Button>

@@ -3,11 +3,11 @@ import { IUser } from "../models/models"
 
 export default class UserStore {
   private _isAuth: boolean
-  private _user: IUser | {} | unknown
+  private _user: IUser | null
 
   constructor() {
     this._isAuth = false
-    this._user = {}
+    this._user = null
     makeAutoObservable(this)
   }
 
@@ -15,7 +15,7 @@ export default class UserStore {
     this._isAuth = bool
   }
 
-  setUser(user: IUser | {} | unknown) {
+  setUser(user: IUser | null) {
     this._user = user
   }
 
