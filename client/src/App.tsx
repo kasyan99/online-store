@@ -23,12 +23,15 @@ const App = observer(() => {
   }
 
   return (
-    <BrowserRouter>
-      <NavBar />
-      <Container>
-        <AppRouter />
-      </Container>
-    </BrowserRouter>
+    <>
+      <BrowserRouter>
+        <NavBar />
+        <Container>
+          <AppRouter />
+        </Container>
+      </BrowserRouter>
+    </>
+
   );
 })
 

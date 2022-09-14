@@ -5,15 +5,15 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import FormGroup from '@material-ui/core/FormGroup';
 import { Container, FormControl, TextField, Typography } from '@material-ui/core';
-import { LOGIN_ROUTE, REGISTRATION_ROUTE, SHOP_ROUTE } from '../utils/routesConsts';
+import { LOGIN_ROUTE, REGISTRATION_ROUTE, SHOP_ROUTE } from '../../utils/routesConsts';
 import { useLocation, useNavigate } from 'react-router-dom';
-import NavLink from '../components/NavLink';
-import { userAPI } from '../api/userAPI';
+import NavLink from '../../components/NavLink';
+import { userAPI } from '../../api/userAPI';
 import { ChangeEvent, useContext, useState } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Context } from '..';
+import { Context } from '../..';
 import { AxiosError } from 'axios';
-import { IUser } from '../models/models';
+import { IUser } from '../../models/models';
 
 const useStyles = makeStyles({
    root: {
@@ -73,6 +73,7 @@ const Auth = observer(() => {
 
    return (
       <Container maxWidth="sm">
+         <div>textfor</div>
          <Card className={classes.root}>
             <CardContent className={classes.noPadding}>
                <Typography variant='h4' component="h2" style={{ textAlign: 'center', marginBottom: '3%' }}>

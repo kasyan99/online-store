@@ -19,6 +19,7 @@ const useStyles = makeStyles((theme: Theme) =>
 type Props = {
    closeModal?: () => void
 }
+
 const DeviceForm: React.FC<Props> = observer(({ closeModal }) => {
 
    type Inputs = {

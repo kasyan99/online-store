@@ -1,9 +1,9 @@
 import React from "react"
-import Admin from "./pages/Admin"
-import Auth from "./pages/Auth"
-import Basket from "./pages/Basket"
-import DevicePage from "./pages/DevicePage"
-import Shop from "./pages/Shop"
+import AdminContainer from "./pages/Admin/AdminContainer"
+import Auth from "./pages/Auth/Auth"
+import Basket from "./pages/Basket/Basket"
+import DevicePage from "./pages/DevicePage/DevicePage"
+import Shop from "./pages/Shop/Shop"
 import {
   ADMIN_ROUTE,
   BASKET_ROUTE,
@@ -15,13 +15,12 @@ import {
 
 export type RoutType = {
   path: string
-  Component: React.FC
+  Component: React.FC<any>
 }
-
 export const authRoutes: RoutType[] = [
   {
     path: ADMIN_ROUTE,
-    Component: Admin,
+    Component: AdminContainer,
   },
   {
     path: BASKET_ROUTE,

@@ -2,8 +2,8 @@ import { makeStyles, createStyles, Theme, Card, Typography, Button } from "@mate
 import StarRateIcon from '@material-ui/icons/StarRate';
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { deviceAPI } from "../api/deviceAPI";
-import { IDevice } from "../models/models";
+import { deviceAPI } from "../../api/deviceAPI";
+import { IDevice } from "../../models/models";
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -70,13 +70,15 @@ const DevicePage: React.FC = () => {
    useEffect(() => {
       if (params.id) {
          deviceAPI.getOneDevice(params.id).then(data => setDevice(data))
+
       }
    }, [params])
+   console.log('devapi', device);
 
    const imgUrl = device?.img ? `${process.env.REACT_APP_API_URL}${device?.img}` : 'https://www.salonlfc.com/wp-content/uploads/2018/01/image-not-found-1-scaled.png'
    return (
       <>
-         <Card className={classes.card} >
+         <Card className={classes.card} data-testid="card">
             <Typography
                component='h3'
                variant="h3"

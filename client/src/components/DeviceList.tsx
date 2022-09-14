@@ -46,18 +46,8 @@ const useStyles = makeStyles((theme: Theme) =>
 const DeviceList = observer(() => {
    const classes = useStyles();
    const { device } = useContext(Context)
-   // let [winWidth, setWinWidth] = useState(document.documentElement.scrollWidth)
 
    const navigate = useNavigate()
-
-   //use debounce to avoid a lot of rerenders
-   // useEffect(() => {
-   //    window.addEventListener('resize',
-   //       debounce(() => {
-   //          setWinWidth(document.documentElement.scrollWidth)
-   //       }, 300)
-   //    )
-   // }, [])
 
    useEffect(() => {
       deviceAPI.getDevices(null, null, 2, 3).then(data => {

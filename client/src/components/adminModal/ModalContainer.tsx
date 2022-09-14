@@ -22,9 +22,10 @@ const useStyles = makeStyles((theme: Theme) =>
 type Props = {
    modalName: string,
    children: JSX.Element,
+   'data-testid'?: string
 }
 
-const ModalContainer: React.FC<Props> = ({ modalName, children }) => {
+const ModalContainer: React.FC<Props> = ({ modalName, children, "data-testid": testid }) => {
    const classes = useStyles()
 
    const [open, setOpen] = React.useState(false);
@@ -45,7 +46,7 @@ const ModalContainer: React.FC<Props> = ({ modalName, children }) => {
    const childrenWithProps = React.cloneElement(children, childrenProps)
 
    return (
-      <>
+      <div data-testid={testid}>
          <Button variant="outlined" fullWidth onClick={handleOpen}>{modalName}</Button>
          <Modal
             open={open}
@@ -58,7 +59,7 @@ const ModalContainer: React.FC<Props> = ({ modalName, children }) => {
                {childrenWithProps}
             </div>
          </Modal>
-      </>
+      </div>
    )
 }
 

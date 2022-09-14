@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { Grid, GridSize } from '@material-ui/core';
-import DeviceList from '../components/DeviceList';
-import FilterSection from '../components/FilterSection';
-import useWinWidth from '../hooks/useWinWidth';
+import DeviceList from '../../components/DeviceList';
+import FilterSection from '../../components/FilterSection';
+import useWinWidth from '../../hooks/useWinWidth';
 
 const useStyles = makeStyles(() =>
    createStyles({
@@ -33,6 +33,7 @@ const Shop: React.FC = () => {
    }, [winWidth])
 
    return (<>
+      <div></div>
       {winWidth >= 600 &&
          <Grid container className={classes.root} spacing={3}>
             <Grid item xs={asideXS} >
