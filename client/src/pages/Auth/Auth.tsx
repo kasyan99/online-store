@@ -9,11 +9,12 @@ import { LOGIN_ROUTE, REGISTRATION_ROUTE, SHOP_ROUTE } from '../../utils/routesC
 import { useLocation, useNavigate } from 'react-router-dom';
 import NavLink from '../../components/NavLink';
 import { userAPI } from '../../api/userAPI';
-import { ChangeEvent, useContext, useState } from 'react';
+import { useContext } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Context } from '../..';
 import { AxiosError } from 'axios';
 import { IUser } from '../../models/models';
+import { useForm, SubmitHandler } from "react-hook-form";
 
 const useStyles = makeStyles({
    root: {
@@ -24,7 +25,7 @@ const useStyles = makeStyles({
    noPadding: {
       padding: 0
    },
-   formControll: {
+   mb: {
       marginBottom: '3%'
    },
    text: {
@@ -41,11 +42,16 @@ const Auth = observer(() => {
    const location = useLocation()
    const navigate = useNavigate()
    const onRegistr = location.pathname === REGISTRATION_ROUTE
-   const [email, setEmail] = useState<string>('')
-   const [password, setPassword] = useState<string>('')
 
-   const onClick = async () => {
+   type Inputs = {
+      email: string,
+      password: string
+   };
 
+   const methods = useForm<Inputs>();
+   const { register, handleSubmit, formState: { errors } } = methods;
+
+   const onSubmit: SubmitHandler<Inputs> = async ({ email, password }) => {
       try {
          let data: IUser
 
@@ -67,35 +73,55 @@ const Auth = observer(() => {
       }
    }
 
-   const changeValue = (setValue: (value: string) => void) => {
-      return (e: ChangeEvent<HTMLInputElement>) => setValue(e.target.value)
-   }
-
    return (
       <Container maxWidth="sm">
-         <div>textfor</div>
          <Card className={classes.root}>
-            <CardContent className={classes.noPadding}>
-               <Typography variant='h4' component="h2" style={{ textAlign: 'center', marginBottom: '3%' }}>
-                  {onRegistr ? 'Registration' : 'Authorization'}
-               </Typography>
-               <FormGroup>
-                  <FormControl fullWidth className={classes.formControll}>
-                     <TextField label='Email' variant="outlined" placeholder='Enter your email...' value={email} onChange={changeValue(setEmail)} />
-                  </FormControl>
-                  <FormControl fullWidth className={classes.formControll}>
-                     <TextField label='Password' variant="outlined" type='password' placeholder='Enter your password...' value={password} onChange={changeValue(setPassword)} />
-                  </FormControl>
-               </FormGroup>
-            </CardContent>
-            <CardActions className={classes.noPadding} style={{ display: 'flex', justifyContent: 'space-between' }}>
-               <span>
-                  <span className={classes.text}>{onRegistr ? 'Do you have account?' : 'Do not you have account?'}</span> <NavLink to={onRegistr ? LOGIN_ROUTE : REGISTRATION_ROUTE}>{onRegistr ? 'Sign in' : 'Registration'}</NavLink>
-               </span>
+            <form onSubmit={handleSubmit(onSubmit)} >
 
-               <Button variant="contained" color='primary' onClick={onClick}>{onRegistr ? 'Sign up' : 'Sign in'}</Button>
-            </CardActions>
+               <CardContent className={classes.noPadding}>
+                  <Typography variant='h4' component="h2" style={{ textAlign: 'center', marginBottom: '3%' }}>
+                     {onRegistr ? 'Registration' : 'Authorization'}
+                  </Typography>
+                  <FormGroup>
+                     <FormControl fullWidth className={classes.mb}>
+                        <TextField
+                           label='Email'
+                           type="email"
+                           variant="outlined"
+                           placeholder='Enter your email...'
+                           {...register("email", { required: 'Email is required' })}
+                        />
+                     </FormControl>
+                     {errors.email && <span className={classes.mb} style={{ color: 'red', display: 'block' }}>{errors.email.message}</span>}
+                     <FormControl fullWidth className={classes.mb}>
+                        <TextField
+                           label='Password'
+                           variant="outlined"
+                           type='password'
+                           placeholder='Enter your password...'
+                           {...register("password", { required: 'Password is required' })}
+                        />
+                     </FormControl>
+                     {errors.password && <span className={classes.mb} style={{ color: 'red', display: 'block' }}>{errors.password.message}</span>}
+
+                  </FormGroup>
+               </CardContent>
+               <CardActions className={classes.noPadding} style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span>
+                     <span className={classes.text}>{onRegistr ? 'Do you have account?' : 'Do not you have account?'}</span> <NavLink to={onRegistr ? LOGIN_ROUTE : REGISTRATION_ROUTE}>{onRegistr ? 'Sign in' : 'Registration'}</NavLink>
+                  </span>
+
+                  <Button
+                     type='submit'
+                     variant="contained"
+                     color='primary'
+                  >
+                     {onRegistr ? 'Sign up' : 'Sign in'}
+                  </Button>
+               </CardActions>
+            </form>
          </Card>
+
       </Container>
    );
 })

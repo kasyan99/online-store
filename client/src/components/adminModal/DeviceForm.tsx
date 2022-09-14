@@ -35,8 +35,11 @@ const DeviceForm: React.FC<Props> = observer(({ closeModal }) => {
    const onSubmit: SubmitHandler<Inputs> = data => {
       const brandId = getBrandId(data.deviceBrand).toString()
       const typeId = getTypeId(data.deviceType).toString()
-
-      addDevice(data, brandId, typeId)
+      if (file) {
+         addDevice(data, brandId, typeId)
+      } else {
+         setFileError(true)
+      }
    }
 
    //create device on server
@@ -45,7 +48,7 @@ const DeviceForm: React.FC<Props> = observer(({ closeModal }) => {
 
       formData.append('name', `${data.deviceName}`)
       formData.append('price', `${data.devicePrice}`)
-      formData.append('img', file)
+      file && formData.append('img', file)
       formData.append('brandId', brandId)
       formData.append('typeId', typeId)
       formData.append('info', JSON.stringify(info))
@@ -61,7 +64,8 @@ const DeviceForm: React.FC<Props> = observer(({ closeModal }) => {
       deviceAPI.getBrands().then(brands => device.setBrands(brands))
    }, [device])
 
-   const [file, setFile] = useState<any>(null)
+   const [file, setFile] = useState<File | null>(null)
+   const [fileError, setFileError] = useState(false)
    const [info, setInfo] = useState<Array<{ title: string, descriptions: string, id: number }>>([])
 
    //add title and description for propery
@@ -95,21 +99,23 @@ const DeviceForm: React.FC<Props> = observer(({ closeModal }) => {
 
    return (
       <>
-
          {/* "handleSubmit" will validate your inputs before invoking "onSubmit" */}
          <FormProvider {...methods} >
             <form onSubmit={handleSubmit(onSubmit)} >
                {/* register your input into the hook by invoking the "register" function */}
                {/*to use "register" function in "SelectModal" you should put input name and options into 'registerInput'*/}
-               <ModalSelect list={device.types} labelName='Type' registerInput={{ name: 'deviceType', options: { required: true } }} />
-               <ModalSelect list={device.brands} labelName='Brand' registerInput={{ name: 'deviceBrand', options: { required: true } }} />
+               <ModalSelect list={device.types} labelName='Type' registerInput={{ name: 'deviceType', options: { required: 'Device type is required' } }} />
+               {errors.deviceType && <span className={classes.mb} style={{ color: 'red', display: 'block' }}>{errors.deviceType.message}</span>}
+               <ModalSelect list={device.brands} labelName='Brand' registerInput={{ name: 'deviceBrand', options: { required: 'Device brand is required' } }} />
+               {errors.deviceBrand && <span className={classes.mb} style={{ color: 'red', display: 'block' }}>{errors.deviceBrand.message}</span>}
                <InputContainer>
-                  <TextField id={'deviceName'} label={"Device Name"} variant="outlined" {...register("deviceName", { required: true })} />
+                  <TextField id={'deviceName'} label={"Device Name"} variant="outlined" {...register("deviceName", { required: 'Device name is required' })} />
                </InputContainer>
+               {errors.deviceName && <span className={classes.mb} style={{ color: 'red', display: 'block' }}>{errors.deviceName.message}</span>}
                <InputContainer>
-                  <TextField id={'devicePrice'} label={"Device Price"} variant="outlined" {...register("devicePrice", { required: true })} />
+                  <TextField id={'devicePrice'} label={"Device Price"} type='number' variant="outlined" {...register("devicePrice", { required: 'Device price is required' })} />
                </InputContainer>
-
+               {errors.devicePrice && <span className={classes.mb} style={{ color: 'red', display: 'block' }}>{errors.devicePrice.message}</span>}
                {/*button that upload img*/}
                <div className={classes.mb}>
                   <Button
@@ -121,11 +127,15 @@ const DeviceForm: React.FC<Props> = observer(({ closeModal }) => {
                      <input
                         type="file"
                         hidden
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => e.target.files && setFile(e.target.files[0])}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                           e.target.files && setFile(e.target.files[0]);
+                           setFileError(false)
+                        }}
                      />
                   </Button>
                   <span> {file?.name}</span>
                </div>
+               {fileError && <span className={classes.mb} style={{ color: 'red', display: 'block' }}>Upload image</span>}
 
                {/* inputs for property title and descriptions*/}
                {info.map((i) => {
@@ -155,14 +165,16 @@ const DeviceForm: React.FC<Props> = observer(({ closeModal }) => {
                {/*button that creates inputs for property title and descriptions*/}
                <Button variant='outlined' color="primary" onClick={addInfo} className={classes.mb}>Add New Property</Button>
 
-
-               {errors.deviceName && <span>This field is required</span>}
-
                <SubmitBtn />
             </form>
          </FormProvider>
       </>
    );
 })
+
+
+// const ErrorMessage = () => {
+
+// }
 
 export default DeviceForm
