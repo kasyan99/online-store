@@ -18,10 +18,10 @@ const TypeForm = () => {
    const maxLength = 15
    return (
       /* "handleSubmit" will validate your inputs before invoking "onSubmit" */
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit)} data-testid='typeform'>
          {/* register your input into the hook by invoking the "register" function */}
          <InputContainer>
-            <TextField id={'Type'} label={"Type"} variant="outlined" {...register("type", { required: 'This field is required', maxLength: maxLength })} />
+            <TextField id={'Type'} label={"Type"} variant="outlined" {...register("type", { required: 'This field is required', maxLength: maxLength })} data-testid='type input' />
          </InputContainer>
 
          {errors.type && <span style={{ color: 'red' }}>{errors.type.type === 'maxLength' ? `Max length is ${maxLength}` : errors.type.message}</span>}

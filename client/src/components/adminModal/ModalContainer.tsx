@@ -47,12 +47,13 @@ const ModalContainer: React.FC<Props> = ({ modalName, children, "data-testid": t
 
    return (
       <div data-testid={testid}>
-         <Button variant="outlined" fullWidth onClick={handleOpen}>{modalName}</Button>
+         <Button variant="outlined" fullWidth onClick={handleOpen} data-testid='open btn'>{modalName}</Button>
          <Modal
             open={open}
             onClose={handleClose}
             aria-labelledby="simple-modal-title"
             style={{ overflowY: 'auto' }}
+            data-testid='modal'
          >
             <div style={{ left: '50%', top: "10%", transform: 'translate(-50%)' }} className={classes.paper}>
                <h2 id="simple-modal-title">{modalName}</h2>
