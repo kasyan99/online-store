@@ -73,7 +73,6 @@ const DevicePage: React.FC = () => {
 
       }
    }, [params])
-   console.log('devapi', device);
 
    const imgUrl = device?.img ? `${process.env.REACT_APP_API_URL}${device?.img}` : 'https://www.salonlfc.com/wp-content/uploads/2018/01/image-not-found-1-scaled.png'
    return (

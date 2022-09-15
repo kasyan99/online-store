@@ -16,7 +16,6 @@ const AppRouter: React.FC = () => {
 
    return (
       <Routes>
-         {/* {true && AppRoutes(authRoutes)} */}
          {user.isAuth && AppRoutes(authRoutes)}
          {AppRoutes(publicRoutes)}
          <Route
