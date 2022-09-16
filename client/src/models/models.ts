@@ -33,3 +33,10 @@ export interface IDevice {
   typeId: number
   info: Array<DeviceInfo>
 }
+
+export interface IBasket {
+  id: number
+  basketId: number
+  device: IDevice
+  deviceId: number
+}

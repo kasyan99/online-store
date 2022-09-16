@@ -32,4 +32,13 @@ export const userAPI = {
 
     return res
   },
+
+  async getBasketDevices(id: number) {
+    const { data } = await $host.get("api/basket/", {
+      params: {
+        basketId: id,
+      },
+    })
+    return data
+  },
 }

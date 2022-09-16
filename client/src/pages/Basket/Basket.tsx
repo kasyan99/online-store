@@ -1,7 +1,7 @@
 import { Button, Card, createStyles, makeStyles, Theme, Typography } from "@material-ui/core"
 import { useEffect, useState } from "react"
-import { deviceAPI } from "../../api/deviceAPI"
-import { IDevice } from "../../models/models"
+import { userAPI } from "../../api/userAPI"
+import { IBasket } from "../../models/models"
 import StarRateIcon from '@material-ui/icons/StarRate';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -75,49 +75,27 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const Basket: React.FC = () => {
    const classes = useStyles()
-   const imgUrl = 'https://www.salonlfc.com/wp-content/uploads/2018/01/image-not-found-1-scaled.png'
+   // const imgUrl = 'https://www.salonlfc.com/wp-content/uploads/2018/01/image-not-found-1-scaled.png'
 
-   // const [devices, setDevices] = useState<IDevice[] | null>(null)
-   // useEffect(() => {
-   //       deviceAPI.getBasketDevices().then(data => setDevices(data))
-   // }, [])
+   const [basket, setBasket] = useState<IBasket[] | null>(null)
+   const getBasketDevices = async () => {
+      const user = await userAPI.check()
+      console.log(user);
 
-   const devices: IDevice[] = [
-      {
-         id: 1,
-         img: '',
-         info: [],
-         name: 'Device 1',
-         price: 1200,
-         rating: 5,
-         typeId: 1,
-         brandId: 1,
-      },
-      {
-         id: 2,
-         img: '',
-         info: [],
-         name: 'Device 2',
-         price: 1200,
-         rating: 5,
-         typeId: 1,
-         brandId: 1,
-      },
-      {
-         id: 3,
-         img: '',
-         info: [],
-         name: 'Device 3',
-         price: 1200,
-         rating: 5,
-         typeId: 1,
-         brandId: 1,
-      },
-   ]
+      const basket = await userAPI.getBasketDevices(user.id)
+      setBasket(basket)
+   }
+   useEffect(() => {
+      getBasketDevices()
+      // userAPI.getBasketDevices().then(data => setBasket(data))
+   }, [])
+
+   console.log(basket);
+
    return (
       <>
          <Typography variant="h3" component='h2' className={classes.h2}>Basket</Typography>
-         {devices?.map(device => <Card className={classes.card} data-testid="card">
+         {basket?.map(({ device }) => <Card className={classes.card} data-testid="card" key={Date.now() + Math.random()}>
             <Typography
                component='h3'
                variant="h4"
@@ -129,7 +107,7 @@ const Basket: React.FC = () => {
 
             <div className={classes.imgCont}>
                <img
-                  src={imgUrl}
+                  src={`${process.env.REACT_APP_API_URL}${device?.img}`}
                   alt={device?.name}
                   style={{ height: '100%', objectFit: 'contain' }}
                   className={classes.img}

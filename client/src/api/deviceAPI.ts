@@ -47,9 +47,4 @@ export const deviceAPI = {
     const { data } = await $host.get("api/device/" + id)
     return data
   },
-
-  async getBasketDevices() {
-    const { data } = await $host.get("api/basket")
-    return data
-  },
 }
