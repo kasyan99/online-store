@@ -41,4 +41,22 @@ export const userAPI = {
     })
     return data
   },
+
+  async addDeviceToBasket(basketId: number, deviceId: number) {
+    const { data } = await $host.post("api/basket/", {
+      basketId,
+      deviceId,
+    })
+    return data
+  },
+
+  async removeDeviceFromBasket(basketId: number, deviceId: number) {
+    const { data } = await $host.delete("api/basket/", {
+      data: {
+        basketId,
+        deviceId,
+      },
+    })
+    return data
+  },
 }

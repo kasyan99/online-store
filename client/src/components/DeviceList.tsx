@@ -49,12 +49,12 @@ const DeviceList = observer(() => {
 
    const navigate = useNavigate()
 
-   useEffect(() => {
-      deviceAPI.getDevices(null, null, 2, 3).then(data => {
-         device.setDevices(data.rows)
-         device.setTotalCount(data.count)
-      })
-   }, [device])
+   // useEffect(() => {
+   //    deviceAPI.getDevices(null, null, 2, 3).then(data => {
+   //       device.setDevices(data.rows)
+   //       device.setTotalCount(data.count)
+   //    })
+   // }, [device])
 
    useEffect(() => {
       deviceAPI.getDevices(device.selectedType?.id, device.selectedBrand?.id, device.page, device.limit).then(data => {

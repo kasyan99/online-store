@@ -6,6 +6,7 @@ import { observer } from 'mobx-react-lite';
 import { Context } from '.';
 import { useContext, useEffect, useState } from 'react';
 import { userAPI } from './api/userAPI';
+import { IBasket } from './models/models';
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -29,6 +30,16 @@ const App = observer(() => {
       user.setIsAuth(true)
     }).finally(() => setLoading(false))
   }, [user])
+
+  useEffect(() => {
+    if (user.user) {
+      userAPI.getBasketDevices(user.user.id).then((data: IBasket[]) => {
+        const basketDevices = data.map(device => device.deviceId)
+        user.setBasketDevicesCount(data.length)
+        user.setBasketDevices(basketDevices)
+      })
+    }
+  }, [user, user.user, user.basketDevicesCount])
 
   if (loading) {
     return <LinearProgress style={{ marginTop: '3%' }} />

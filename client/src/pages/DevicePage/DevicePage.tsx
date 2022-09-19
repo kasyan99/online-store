@@ -1,8 +1,11 @@
 import { makeStyles, createStyles, Theme, Card, Typography, Button } from "@material-ui/core"
 import StarRateIcon from '@material-ui/icons/StarRate';
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { Context } from "../..";
 import { deviceAPI } from "../../api/deviceAPI";
+import { userAPI } from "../../api/userAPI";
+import useRemoveDevice from "../../hooks/useRemoveDevice";
 import { IDevice } from "../../models/models";
 
 
@@ -64,15 +67,40 @@ const useStyles = makeStyles((theme: Theme) =>
 const DevicePage: React.FC = () => {
    const classes = useStyles()
    const [device, setDevice] = useState<IDevice | null>(null)
+   const [isInBasket, setIsInBasket] = useState(false)
 
    const params = useParams()
 
+   const { user } = useContext(Context)
    useEffect(() => {
       if (params.id) {
          deviceAPI.getOneDevice(params.id).then(data => setDevice(data))
-
       }
    }, [params])
+
+   useEffect(() => {
+      if (device?.id) {
+         setIsInBasket(user.basketDevices.includes(device.id))
+      }
+   }, [device?.id, user.basketDevices])
+
+   const addToBasket = () => {
+      if (user.user) {
+         const deviceId = Number(params.id)
+         const basketId = user.user?.id
+         userAPI.addDeviceToBasket(basketId, deviceId)
+         user.setBasketDevicesCount(user.basketDevicesCount + 1)
+      }
+   }
+
+   // const removeDevice = (deviceId: number) => {
+   //    if (user.user) {
+   //       userAPI.removeDeviceFromBasket(user.user.id, deviceId)
+   //       user.setBasketDevicesCount(user.basketDevicesCount - 1)
+   //    }
+   // }
+
+   const removeDevice = useRemoveDevice()
 
    const imgUrl = device?.img ? `${process.env.REACT_APP_API_URL}${device?.img}` : 'https://www.salonlfc.com/wp-content/uploads/2018/01/image-not-found-1-scaled.png'
    return (
@@ -109,8 +137,24 @@ const DevicePage: React.FC = () => {
             >
                Price: <b>{device?.price}$</b>
             </Typography>
+            {!isInBasket &&
+               <Button
+                  variant="contained"
+                  color='primary'
+                  style={{ background: '#ffa500' }}
+                  onClick={addToBasket}
+               >
+                  Add to basket
+               </Button>}
+            {isInBasket &&
+               <Button
+                  variant="contained"
+                  color='secondary'
+                  onClick={() => device && removeDevice(device.id)}
+               >
+                  Remove
+               </Button>}
 
-            <Button variant="contained" color='primary' style={{ background: '#ffa500' }}>Add to basket</Button>
          </Card>
          <Typography
             style={{ marginTop: 25 }}

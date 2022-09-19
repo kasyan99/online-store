@@ -1,8 +1,11 @@
 import { Button, Card, createStyles, makeStyles, Theme, Typography } from "@material-ui/core"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { userAPI } from "../../api/userAPI"
 import { IBasket } from "../../models/models"
 import StarRateIcon from '@material-ui/icons/StarRate';
+import { Context } from "../..";
+import { observer } from "mobx-react-lite";
+import useRemoveDevice from "../../hooks/useRemoveDevice";
 
 const useStyles = makeStyles((theme: Theme) =>
    createStyles({
@@ -73,24 +76,31 @@ const useStyles = makeStyles((theme: Theme) =>
    }),
 )
 
-const Basket: React.FC = () => {
+const Basket: React.FC = observer(() => {
    const classes = useStyles()
    // const imgUrl = 'https://www.salonlfc.com/wp-content/uploads/2018/01/image-not-found-1-scaled.png'
 
    const [basket, setBasket] = useState<IBasket[] | null>(null)
-   const getBasketDevices = async () => {
-      const user = await userAPI.check()
-      console.log(user);
+   const { user } = useContext(Context)
 
-      const basket = await userAPI.getBasketDevices(user.id)
-      setBasket(basket)
-   }
    useEffect(() => {
+      const getBasketDevices = async () => {
+         if (user.user) {
+            const basket = await userAPI.getBasketDevices(user.user.id)
+            setBasket(basket)
+         }
+      }
       getBasketDevices()
-      // userAPI.getBasketDevices().then(data => setBasket(data))
-   }, [])
+   }, [user.user, user.basketDevicesCount])
 
-   console.log(basket);
+   // const removeDevice = (deviceId: number) => {
+   //    if (user.user) {
+   //       userAPI.removeDeviceFromBasket(user.user.id, deviceId)
+   //       user.setBasketDevicesCount(user.basketDevicesCount - 1)
+   //    }
+   // }
+
+   const removeDevice = useRemoveDevice()
 
    return (
       <>
@@ -128,11 +138,11 @@ const Basket: React.FC = () => {
                Price: <b>{device?.price}$</b>
             </Typography>
 
-            <Button variant="contained" color='secondary' className={classes.btn}>Remove</Button>
+            <Button variant="contained" color='secondary' className={classes.btn} onClick={() => removeDevice(device.id)}>Remove</Button>
          </Card>)}
 
       </>
    )
-}
+})
 
 export default Basket

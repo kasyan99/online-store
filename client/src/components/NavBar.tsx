@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -61,6 +61,11 @@ const NavBar = observer(() => {
       setAuth(user.isAuth)
    }, [user.isAuth])
 
+   const [devicesCount, setDevicesCount] = useState(user.basketDevicesCount)
+   useEffect(() => {
+      setDevicesCount(user.basketDevicesCount)
+   }, [user.basketDevicesCount])
+
    return (
       <div className={classes.root}>
          <AppBar position="fixed">
@@ -81,9 +86,14 @@ const NavBar = observer(() => {
                      }
                      <Link to={BASKET_ROUTE}>
                         <IconButton>
-                           <Badge badgeContent={4} color="secondary" overlap="rectangular">
+                           {devicesCount !== 0 &&
+                              <Badge badgeContent={devicesCount} color="secondary" overlap="rectangular">
+                                 <ShoppingCartIcon style={{ color: 'white' }} />
+                              </Badge>
+                           }
+                           {devicesCount === 0 &&
                               <ShoppingCartIcon style={{ color: 'white' }} />
-                           </Badge>
+                           }
                         </IconButton>
                      </Link>
 

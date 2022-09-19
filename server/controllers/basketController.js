@@ -17,6 +17,14 @@ class BasketController {
       })
       return res.json(basketDevices)
    }
+   async deleteOne(req, res) {
+      const { basketId, deviceId } = req.body
+      console.log(basketId, deviceId);
+      const basketDevice = await BasketDevice.destroy({
+         where: { basketId, deviceId },
+      })
+      return res.json(basketDevice)
+   }
 }
 
 module.exports = new BasketController
