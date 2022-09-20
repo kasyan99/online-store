@@ -43,7 +43,8 @@ const DeviceForm: React.FC<Props> = observer(({ closeModal }) => {
    }
 
    //create device on server
-   const addDevice = (data: Inputs, brandId: string, typeId: string) => {
+   const addDevice = async (data: Inputs, brandId: string, typeId: string) => {
+      setIsFetching(true)
       const formData = new FormData()
 
       formData.append('name', `${data.deviceName}`)
@@ -53,7 +54,9 @@ const DeviceForm: React.FC<Props> = observer(({ closeModal }) => {
       formData.append('typeId', typeId)
       formData.append('info', JSON.stringify(info))
 
-      deviceAPI.createDevice(formData).then(() => closeModal && closeModal())
+      await deviceAPI.createDevice(formData)
+      setIsFetching(false)
+      closeModal && closeModal()
    }
 
    const { device } = useContext(Context)
@@ -96,6 +99,8 @@ const DeviceForm: React.FC<Props> = observer(({ closeModal }) => {
    }
 
    const classes = useStyles()
+
+   const [isFetching, setIsFetching] = useState(false)
 
    return (
       <>
@@ -165,7 +170,7 @@ const DeviceForm: React.FC<Props> = observer(({ closeModal }) => {
                {/*button that creates inputs for property title and descriptions*/}
                <Button variant='outlined' color="primary" onClick={addInfo} className={classes.mb}>Add New Property</Button>
 
-               <SubmitBtn />
+               <SubmitBtn isFetching={isFetching} />
             </form>
          </FormProvider>
       </>

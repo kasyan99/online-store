@@ -1,12 +1,15 @@
 import { makeStyles, createStyles, Theme, Card, Typography, Button } from "@material-ui/core"
 import StarRateIcon from '@material-ui/icons/StarRate';
 import { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Context } from "../..";
 import { deviceAPI } from "../../api/deviceAPI";
 import { userAPI } from "../../api/userAPI";
 import useRemoveDevice from "../../hooks/useRemoveDevice";
 import { IDevice } from "../../models/models";
+import CircleLoader from "../../components/loaders/CircleLoader";
+import { observer } from "mobx-react-lite";
+import { LOGIN_ROUTE } from "../../utils/routesConsts";
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -64,17 +67,23 @@ const useStyles = makeStyles((theme: Theme) =>
    }),
 )
 
-const DevicePage: React.FC = () => {
+const DevicePage: React.FC = observer(() => {
    const classes = useStyles()
    const [device, setDevice] = useState<IDevice | null>(null)
    const [isInBasket, setIsInBasket] = useState(false)
+   const [isFetching, setIsFetching] = useState(true)
+   const [isAdding, setIsAdding] = useState(false)
 
    const params = useParams()
+
+   const navigate = useNavigate()
 
    const { user } = useContext(Context)
    useEffect(() => {
       if (params.id) {
-         deviceAPI.getOneDevice(params.id).then(data => setDevice(data))
+         deviceAPI.getOneDevice(params.id)
+            .then(data => setDevice(data))
+            .then(() => setIsFetching(false))
       }
    }, [params])
 
@@ -84,25 +93,27 @@ const DevicePage: React.FC = () => {
       }
    }, [device?.id, user.basketDevices])
 
-   const addToBasket = () => {
+   const addToBasket = async () => {
       if (user.user) {
+         setIsAdding(true)
          const deviceId = Number(params.id)
          const basketId = user.user?.id
-         userAPI.addDeviceToBasket(basketId, deviceId)
+         await userAPI.addDeviceToBasket(basketId, deviceId)
+         setIsAdding(false)
          user.setBasketDevicesCount(user.basketDevicesCount + 1)
+      } else {
+         navigate(LOGIN_ROUTE, { replace: true })
       }
    }
 
-   // const removeDevice = (deviceId: number) => {
-   //    if (user.user) {
-   //       userAPI.removeDeviceFromBasket(user.user.id, deviceId)
-   //       user.setBasketDevicesCount(user.basketDevicesCount - 1)
-   //    }
-   // }
-
-   const removeDevice = useRemoveDevice()
+   const { remove: removeDevice, isRemoving } = useRemoveDevice()
 
    const imgUrl = device?.img ? `${process.env.REACT_APP_API_URL}${device?.img}` : 'https://www.salonlfc.com/wp-content/uploads/2018/01/image-not-found-1-scaled.png'
+
+   if (isFetching) {
+      return <CircleLoader />
+   }
+
    return (
       <>
          <Card className={classes.card} data-testid="card">
@@ -143,6 +154,7 @@ const DevicePage: React.FC = () => {
                   color='primary'
                   style={{ background: '#ffa500' }}
                   onClick={addToBasket}
+                  disabled={isAdding}
                >
                   Add to basket
                </Button>}
@@ -151,6 +163,7 @@ const DevicePage: React.FC = () => {
                   variant="contained"
                   color='secondary'
                   onClick={() => device && removeDevice(device.id)}
+                  disabled={isRemoving}
                >
                   Remove
                </Button>}
@@ -171,6 +184,6 @@ const DevicePage: React.FC = () => {
          </Card>
       </>
    )
-}
+})
 
 export default DevicePage

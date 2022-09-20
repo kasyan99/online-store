@@ -1,15 +1,22 @@
 import { TextField } from "@material-ui/core";
+import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { deviceAPI } from "../../api/deviceAPI";
 import InputContainer from "./inputs/InputContainer";
 import SubmitBtn from "./SubmitBtn";
 
 const TypeForm = () => {
+   const [isFetching, setIsFetching] = useState(false)
+
    type Inputs = {
       type: string,
-   };
-   const addType = (typeName: string) => {
-      deviceAPI.createType({ name: typeName }).then(() => resetField('type'))
+   }
+
+   const addType = async (typeName: string) => {
+      setIsFetching(true)
+      await deviceAPI.createType({ name: typeName })
+      resetField('type')
+      setIsFetching(false)
    }
 
    const { register, handleSubmit, formState: { errors }, resetField } = useForm<Inputs>();
@@ -25,8 +32,7 @@ const TypeForm = () => {
          </InputContainer>
 
          {errors.type && <span style={{ color: 'red' }}>{errors.type.type === 'maxLength' ? `Max length is ${maxLength}` : errors.type.message}</span>}
-
-         <SubmitBtn />
+         <SubmitBtn isFetching={isFetching} />
       </form>
    );
 }

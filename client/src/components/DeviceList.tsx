@@ -1,6 +1,6 @@
 import { Grid, makeStyles, createStyles, Theme, GridSize, Card, CardActionArea, CardMedia, Typography, CardContent, } from "@material-ui/core"
 import { Pagination } from '@material-ui/lab';
-import { ChangeEvent, useContext, useEffect } from 'react';
+import { ChangeEvent, useContext, useEffect, useState } from 'react';
 import { Context } from '..';
 import { observer } from 'mobx-react-lite';
 import StarRateIcon from '@material-ui/icons/StarRate';
@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { DEVICE_ROUTE } from "../utils/routesConsts";
 import { deviceAPI } from "../api/deviceAPI";
 import useWinWidth from "../hooks/useWinWidth";
-
+import CircleLoader from "./loaders/CircleLoader";
 
 const useStyles = makeStyles((theme: Theme) =>
    createStyles({
@@ -46,6 +46,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const DeviceList = observer(() => {
    const classes = useStyles();
    const { device } = useContext(Context)
+   const [isFetching, setIsFetching] = useState(true)
 
    const navigate = useNavigate()
 
@@ -57,10 +58,14 @@ const DeviceList = observer(() => {
    // }, [device])
 
    useEffect(() => {
-      deviceAPI.getDevices(device.selectedType?.id, device.selectedBrand?.id, device.page, device.limit).then(data => {
-         device.setDevices(data.rows)
-         device.setTotalCount(data.count)
-      })
+      setIsFetching(true)
+
+      deviceAPI.getDevices(device.selectedType?.id, device.selectedBrand?.id, device.page, device.limit)
+         .then(data => {
+            device.setDevices(data.rows)
+            device.setTotalCount(data.count)
+         })
+         .then(() => setIsFetching(false))
    }, [device, device.page, device.limit, device.selectedType, device.selectedBrand])
 
    const pageCount = Math.ceil(device.totalCount / device.limit)
@@ -85,6 +90,10 @@ const DeviceList = observer(() => {
 
    const handleChange = (page: number) => {
       device.setPage(page)
+   }
+
+   if (isFetching) {
+      return <CircleLoader />
    }
 
    return <>
