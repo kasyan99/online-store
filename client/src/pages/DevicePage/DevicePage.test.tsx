@@ -56,16 +56,16 @@ describe("get device test", () => {
 })
 
 
-describe("Device page", () => {
-  it("card should be in the document", () => {
-    render(<DevicePage />)
-    const linkElement = screen.getByTestId("card")
-    expect(linkElement).toBeInTheDocument()
-  })
+// describe("Device page", () => {
+//   it("card should be in the document", () => {
+//     render(<DevicePage />)
+//     const linkElement = screen.getByTestId("card")
+//     expect(linkElement).toBeInTheDocument()
+//   })
 
-  it("price should not be in the document", () => {
-    render(<DevicePage />)
-    const linkElement = screen.queryByTitle(/Price: 1200/i)
-    expect(linkElement).toBeNull()
-  })
-})
+//   it("price should not be in the document", () => {
+//     render(<DevicePage />)
+//     const linkElement = screen.queryByTitle(/Price: 1200/i)
+//     expect(linkElement).toBeNull()
+//   })
+// })

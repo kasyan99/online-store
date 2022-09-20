@@ -14,6 +14,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Badge, Button } from '@material-ui/core';
 import { ADMIN_ROUTE, BASKET_ROUTE, LOGIN_ROUTE, SHOP_ROUTE } from '../utils/routesConsts';
 import NavLink from './NavLink';
+import EditIcon from '@material-ui/icons/Edit';
 
 const useStyles = makeStyles((theme: Theme) =>
    createStyles({
@@ -30,6 +31,9 @@ const useStyles = makeStyles((theme: Theme) =>
             color: 'white',
             textDecoration: 'none'
          },
+         '@media(max-width:400px)': {
+            fontSize: '16px'
+         }
       }
    }),
 );
@@ -80,9 +84,19 @@ const NavBar = observer(() => {
                {auth && (
                   <div>
                      {user.user?.role === 'ADMIN' &&
-                        <Button variant='contained' style={{ cursor: 'pointer' }}>
-                           <Link to={ADMIN_ROUTE} style={{ textDecoration: 'none', color: 'black' }}>Admin</Link>
-                        </Button>
+                        <>
+                           <Button
+                              style={{ marginRight: 5, width: '1%' }}
+                              onClick={() => user.toggleEditMode()}
+                              variant={user.editMode ? 'contained' : 'text'}
+                           >
+                              <EditIcon style={!user.editMode ? { color: 'white' } : { color: 'gray' }} />
+                           </Button>
+                           <Button variant='contained' style={{ cursor: 'pointer', marginRight: 5 }}>
+                              <Link to={ADMIN_ROUTE} style={{ textDecoration: 'none', color: 'black' }}>Admin</Link>
+                           </Button>
+                        </>
+
                      }
                      <Link to={BASKET_ROUTE}>
                         <IconButton>

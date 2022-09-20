@@ -9,6 +9,7 @@ import { DEVICE_ROUTE } from "../utils/routesConsts";
 import { deviceAPI } from "../api/deviceAPI";
 import useWinWidth from "../hooks/useWinWidth";
 import CircleLoader from "./loaders/CircleLoader";
+import CancelIcon from '@material-ui/icons/Cancel';
 
 const useStyles = makeStyles((theme: Theme) =>
    createStyles({
@@ -21,6 +22,21 @@ const useStyles = makeStyles((theme: Theme) =>
          height: 230,
          '@media(max-width: 800px)': {
             height: 430,
+         },
+         position: 'relative'
+      },
+      deleteBtn: {
+         position: 'absolute',
+         top: 5,
+         right: 5,
+         zIndex: 99,
+         cursor: 'pointer',
+         transition: 'transform 200ms',
+         '&:hover': {
+            transform: 'scale(1.2)'
+         },
+         '&:active svg': {
+            color: 'grey'
          }
       },
       media: {
@@ -45,17 +61,10 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const DeviceList = observer(() => {
    const classes = useStyles();
-   const { device } = useContext(Context)
+   const { device, user } = useContext(Context)
    const [isFetching, setIsFetching] = useState(true)
 
    const navigate = useNavigate()
-
-   // useEffect(() => {
-   //    deviceAPI.getDevices(null, null, 2, 3).then(data => {
-   //       device.setDevices(data.rows)
-   //       device.setTotalCount(data.count)
-   //    })
-   // }, [device])
 
    useEffect(() => {
       setIsFetching(true)
@@ -66,7 +75,7 @@ const DeviceList = observer(() => {
             device.setTotalCount(data.count)
          })
          .then(() => setIsFetching(false))
-   }, [device, device.page, device.limit, device.selectedType, device.selectedBrand])
+   }, [device, device.page, device.limit, device.selectedType, device.selectedBrand, device.totalCount])
 
    const pageCount = Math.ceil(device.totalCount / device.limit)
 
@@ -92,6 +101,19 @@ const DeviceList = observer(() => {
       device.setPage(page)
    }
 
+   const toDevicePage = (deviceId: number) => {
+      if (!user.editMode) {
+         navigate(DEVICE_ROUTE + '/' + deviceId)
+      }
+   }
+
+   const deleteDevice = async (deviceId: number) => {
+      console.log('delete', deviceId)
+      await deviceAPI.deleteOneDevice(deviceId)
+      device.setTotalCount(device.totalCount - 1)
+      // console.log(device.devices.filter(d => d.id !== id))
+   }
+
    if (isFetching) {
       return <CircleLoader />
    }
@@ -102,15 +124,20 @@ const DeviceList = observer(() => {
             return <Grid item
                xs={calcGridSize(winWidth)}
                key={device.id + Date.now()}
-               onClick={() => navigate(DEVICE_ROUTE + '/' + device.id)}
+               onClick={() => toDevicePage(device.id)}
                className={classes.item}
             >
                <Card className={classes.card}>
+                  {user.editMode &&
+                     <div className={classes.deleteBtn} onClick={() => deleteDevice(device.id)}>
+                        <CancelIcon color="error" />
+                     </div>}
+
                   <CardActionArea style={{ height: "100%", display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'stretch' }}>
                      <CardMedia
                         className={classes.media}
                         image={process.env.REACT_APP_API_URL + device.img}
-                        title="Contemplative Reptile"
+                        title={device.name}
                      />
                      <CardContent>
                         <Typography gutterBottom variant="h5" component="h2">

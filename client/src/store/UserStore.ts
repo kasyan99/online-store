@@ -6,17 +6,19 @@ export default class UserStore {
   private _user: IUser | null
   private _basketDevicesCount: number
   private _basketDevices: number[]
+  private _editMode: boolean
 
   constructor() {
     this._isAuth = false
     this._user = null
     this._basketDevicesCount = 0
     this._basketDevices = []
+    this._editMode = false
     makeAutoObservable(this)
   }
 
-  setIsAuth(bool: boolean) {
-    this._isAuth = bool
+  setIsAuth(value: boolean) {
+    this._isAuth = value
   }
 
   setUser(user: IUser | null) {
@@ -35,6 +37,10 @@ export default class UserStore {
     this._basketDevices = [...this._basketDevices, deviceId]
   }
 
+  toggleEditMode() {
+    this._editMode = !this._editMode
+  }
+
   get isAuth() {
     return this._isAuth
   }
@@ -49,5 +55,9 @@ export default class UserStore {
 
   get basketDevices() {
     return this._basketDevices
+  }
+
+  get editMode() {
+    return this._editMode
   }
 }
