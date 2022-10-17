@@ -1,11 +1,11 @@
 import { makeAutoObservable } from "mobx"
-import { IUser } from "../models/models"
+import { IDevice, IUser } from "../models/models"
 
 export default class UserStore {
   private _isAuth: boolean
   private _user: IUser | null
   private _basketDevicesCount: number
-  private _basketDevices: number[]
+  private _basketDevices: IDevice[]
   private _editMode: boolean
 
   constructor() {
@@ -29,11 +29,15 @@ export default class UserStore {
     this._basketDevicesCount = count
   }
 
-  setBasketDevices(devicesId: number[]) {
+  // setBasketDevices(devicesId: number[]) {
+  //   this._basketDevices = devicesId
+  // }
+
+  setBasketDevices(devicesId: IDevice[]) {
     this._basketDevices = devicesId
   }
 
-  addBasketDevices(deviceId: number) {
+  addBasketDevices(deviceId: IDevice) {
     this._basketDevices = [...this._basketDevices, deviceId]
   }
 

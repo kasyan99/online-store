@@ -63,8 +63,8 @@ const DeviceForm: React.FC<Props> = observer(({ closeModal }) => {
 
    /*Get brands and types lists for select*/
    useEffect(() => {
-      deviceAPI.getTypes().then(types => device.setTypes(types))
-      deviceAPI.getBrands().then(brands => device.setBrands(brands))
+      deviceAPI.getTypes().then(data => device.setTypes(data.types))
+      deviceAPI.getBrands().then(data => device.setBrands(data.brands))
    }, [device])
 
    const [file, setFile] = useState<File | null>(null)
@@ -87,14 +87,14 @@ const DeviceForm: React.FC<Props> = observer(({ closeModal }) => {
    //get selected brand id
    const getBrandId = (brand: string) => {
       let brandId = -1
-      device.brands.forEach(b => b.name === brand ? brandId = b.id : void 0)
+      device.brands.forEach(b => b.name === brand ? brandId = b._id : void 0)
       return brandId
    }
 
    //get selected type id
    const getTypeId = (type: string) => {
       let typeId = -1
-      device.types.forEach(t => t.name === type ? typeId = t.id : void 0)
+      device.types.forEach(t => t.name === type ? typeId = t._id : void 0)
       return typeId
    }
 
@@ -176,10 +176,5 @@ const DeviceForm: React.FC<Props> = observer(({ closeModal }) => {
       </>
    );
 })
-
-
-// const ErrorMessage = () => {
-
-// }
 
 export default DeviceForm

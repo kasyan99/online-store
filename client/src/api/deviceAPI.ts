@@ -45,10 +45,11 @@ export const deviceAPI = {
 
   async getOneDevice(id: string) {
     const { data } = await $host.get("api/device/" + id)
+
     return data
   },
 
-  async deleteOneDevice(id: number) {
+  async deleteOneDevice(id: string) {
     const { data } = await $authHost.delete("api/device/", {
       data: {
         id,

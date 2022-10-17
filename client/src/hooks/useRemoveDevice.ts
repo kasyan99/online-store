@@ -5,7 +5,7 @@ import { userAPI } from "../api/userAPI"
 const useRemoveDevice = () => {
   const { user } = useContext(Context)
   const [isRemoving, setIsRemoving] = useState(false)
-  const remove: (deviceId: number) => void = async (deviceId) => {
+  const remove: (deviceId: string) => void = async (deviceId) => {
     setIsRemoving(true)
     if (user.user) {
       await userAPI.removeDeviceFromBasket(user.user.id, deviceId)

@@ -1,8 +1,9 @@
 import { Button, Card, LinearProgress, createStyles, makeStyles, Theme, Typography } from "@material-ui/core"
-import { IBasket, IDevice } from "../../models/models"
+import { IDevice } from "../../models/models"
 import StarRateIcon from '@material-ui/icons/StarRate';
 import { observer } from "mobx-react-lite";
 import useRemoveDevice from "../../hooks/useRemoveDevice";
+import { checkSrc } from "../../utils/checkSrc";
 
 const useStyles = makeStyles((theme: Theme) =>
    createStyles({
@@ -70,7 +71,10 @@ type ItemProps = {
    device: IDevice
 }
 const BasketItem: React.FC<ItemProps> = ({ device }) => {
+
    const { remove: removeDevice, isRemoving } = useRemoveDevice()
+
+   const src = checkSrc(device?.img)
 
    const classes = useStyles()
    return <Card className={classes.card} data-testid="card" key={Date.now() + Math.random()}>
@@ -87,7 +91,7 @@ const BasketItem: React.FC<ItemProps> = ({ device }) => {
 
       <div className={classes.imgCont}>
          <img
-            src={`${process.env.REACT_APP_API_URL}${device?.img}`}
+            src={src}
             alt={device?.name}
             style={{ height: '100%', objectFit: 'contain' }}
             className={classes.img}
@@ -108,18 +112,19 @@ const BasketItem: React.FC<ItemProps> = ({ device }) => {
          Price: <b>{device?.price}$</b>
       </Typography>
 
-      <Button variant="contained" color='secondary' className={classes.btn} onClick={() => removeDevice(device.id)} disabled={isRemoving}>Remove</Button>
+      <Button variant="contained" color='secondary' className={classes.btn} onClick={() => removeDevice(device._id)} disabled={isRemoving}>Remove</Button>
    </Card>
 }
 
 type Props = {
-   basket: IBasket[] | null
+   basket: IDevice[] | null
 }
 
 const BasketList: React.FC<Props> = observer(({ basket }) => {
+
    return (
       <>
-         {basket?.map(({ device }) => <BasketItem device={device} />)}
+         {basket?.map((device) => <BasketItem device={device} />)}
       </>
    )
 })

@@ -1,7 +1,7 @@
 import { createStyles, makeStyles, Theme, Typography } from "@material-ui/core"
 import { useContext, useEffect, useState } from "react"
 import { userAPI } from "../../api/userAPI"
-import { IBasket } from "../../models/models"
+import { IBasket, IDevice } from "../../models/models"
 import { Context } from "../..";
 import { observer } from "mobx-react-lite";
 import CircleLoader from "../../components/loaders/CircleLoader";
@@ -23,7 +23,7 @@ const Basket: React.FC = observer(() => {
    const classes = useStyles()
    // const imgUrl = 'https://www.salonlfc.com/wp-content/uploads/2018/01/image-not-found-1-scaled.png'
 
-   const [basket, setBasket] = useState<IBasket[] | null>(null)
+   const [basket, setBasket] = useState<IDevice[] | null>(null)
    const { user } = useContext(Context)
    const [isFetching, setIsFetching] = useState(true)
 
@@ -31,6 +31,8 @@ const Basket: React.FC = observer(() => {
       const getBasketDevices = async () => {
          if (user.user) {
             const basket = await userAPI.getBasketDevices(user.user.id)
+            console.log('basket', basket);
+
             setBasket(basket)
             setIsFetching(false)
          }

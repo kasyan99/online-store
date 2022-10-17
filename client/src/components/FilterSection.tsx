@@ -26,12 +26,13 @@ const FilterSection: React.FC = observer(() => {
 
    useEffect(() => {
       deviceAPI.getTypes()
-         .then(types => device.setTypes(types))
+         .then(data => device.setTypes(data.types))
          .then(() => setIsFetchingTypes(false))
       deviceAPI.getBrands()
-         .then(brands => device.setBrands(brands))
+         .then(data => device.setBrands(data.brands))
          .then(() => setIsFetchingBrands(false))
    }, [device])
+
 
    return (
       <Paper style={{ borderRadius: '5px' }}>

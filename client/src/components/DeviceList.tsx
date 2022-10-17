@@ -10,6 +10,9 @@ import { deviceAPI } from "../api/deviceAPI";
 import useWinWidth from "../hooks/useWinWidth";
 import CircleLoader from "./loaders/CircleLoader";
 import CancelIcon from '@material-ui/icons/Cancel';
+import { userAPI } from "../api/userAPI";
+import { IDevice } from "../models/models";
+import { checkSrc } from "../utils/checkSrc";
 
 const useStyles = makeStyles((theme: Theme) =>
    createStyles({
@@ -65,14 +68,16 @@ const DeviceList = observer(() => {
    const [isFetching, setIsFetching] = useState(true)
 
    const navigate = useNavigate()
-
    useEffect(() => {
       setIsFetching(true)
 
-      deviceAPI.getDevices(device.selectedType?.id, device.selectedBrand?.id, device.page, device.limit)
+      deviceAPI.getDevices(device.selectedType?._id, device.selectedBrand?._id, device.page, device.limit)
          .then(data => {
-            device.setDevices(data.rows)
-            device.setTotalCount(data.count)
+
+            // device.setDevices(data.rows)
+            device.setDevices(data.devices)
+
+            device.setTotalCount(data.totalCount)
          })
          .then(() => setIsFetching(false))
    }, [device, device.page, device.limit, device.selectedType, device.selectedBrand, device.totalCount])
@@ -101,42 +106,56 @@ const DeviceList = observer(() => {
       device.setPage(page)
    }
 
-   const toDevicePage = (deviceId: number) => {
+   const toDevicePage = (deviceId: string) => {
       if (!user.editMode) {
          navigate(DEVICE_ROUTE + '/' + deviceId)
       }
    }
 
-   const deleteDevice = async (deviceId: number) => {
-      console.log('delete', deviceId)
+   const deleteDevice = async (deviceId: string) => {
       await deviceAPI.deleteOneDevice(deviceId)
       device.setTotalCount(device.totalCount - 1)
-      // console.log(device.devices.filter(d => d.id !== id))
    }
+
+   //to update count devices in the basket, if this devise was in the basket
+   useEffect(() => {
+      if (user.user) {
+         userAPI.getBasketDevices(user.user.id).then((data: IDevice[]) => {
+            const basketDevices = data.map(device => {
+               return device
+               // return device.deviceId
+            })
+            user.setBasketDevicesCount(data.length)
+            user.setBasketDevices(basketDevices)
+         })
+      }
+   }, [user, user.user, user.basketDevicesCount, device.totalCount])
 
    if (isFetching) {
       return <CircleLoader />
    }
-
    return <>
       <Grid container spacing={3} style={{ paddingBottom: '3%' }}>
+
          {device.devices.map(device => {
+
+
             return <Grid item
                xs={calcGridSize(winWidth)}
-               key={device.id + Date.now()}
-               onClick={() => toDevicePage(device.id)}
+               key={device._id + Date.now()}
+               onClick={() => toDevicePage(device._id)}
                className={classes.item}
             >
                <Card className={classes.card}>
                   {user.editMode &&
-                     <div className={classes.deleteBtn} onClick={() => deleteDevice(device.id)}>
+                     <div className={classes.deleteBtn} onClick={() => deleteDevice(device._id)}>
                         <CancelIcon color="error" />
                      </div>}
 
                   <CardActionArea style={{ height: "100%", display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'stretch' }}>
                      <CardMedia
                         className={classes.media}
-                        image={process.env.REACT_APP_API_URL + device.img}
+                        image={checkSrc(device.img)}
                         title={device.name}
                      />
                      <CardContent>
@@ -163,7 +182,6 @@ const DeviceList = observer(() => {
             count={pageCount}
             page={device.page}
             onChange={(e: ChangeEvent<unknown>, page: number) => handleChange(page)}
-
             variant="outlined"
             shape="rounded"
             style={{ display: 'inline-block' }} />

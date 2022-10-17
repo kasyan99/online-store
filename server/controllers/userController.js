@@ -18,19 +18,28 @@ class UserController {
          return next(ApiError.badRequest('Wrong data'))
       }
 
-      const candidate = await User.findOne({ where: { email } })
-      if (candidate) {
+      // const candidate = await User.findOne({ where: { email } })
+      const candidate = await User.find({ email })
+      if (candidate.length > 0) {
          return next(ApiError.badRequest('user exists'))
       }
       const hashPassword = await bcrypt.hash(password, 5)
-      const user = await User.create({ email, role, password: hashPassword })
-      const basket = await Basket.create({ userId: user.id })
+      // const user = await User.create({ email, role, password: hashPassword })
+      // const basket = await Basket.create({ userId: user.id })
+
+      const user = new User({
+         email, role, password: hashPassword
+      })
+
+      await user.save()
+
       const token = generateJwt(user.id, user.email, user.role)
       return res.json(token)
    }
+
    async login(req, res, next) {
       const { email, password } = req.body
-      const user = await User.findOne({ where: { email } })
+      const user = await User.findOne({ email })
       if (!user) {
          return next(ApiError.internal('user is not found'))
       }
@@ -41,6 +50,7 @@ class UserController {
       const token = generateJwt(user.id, user.email, user.role)
       return res.json(token)
    }
+
    async check(req, res, next) {
       const token = generateJwt(req.user.id, req.user.email, req.user.role)
       return res.json({ token })

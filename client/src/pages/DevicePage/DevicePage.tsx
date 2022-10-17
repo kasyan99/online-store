@@ -10,6 +10,7 @@ import { IDevice } from "../../models/models";
 import CircleLoader from "../../components/loaders/CircleLoader";
 import { observer } from "mobx-react-lite";
 import { LOGIN_ROUTE } from "../../utils/routesConsts";
+import { checkSrc } from "../../utils/checkSrc";
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -80,6 +81,7 @@ const DevicePage: React.FC = observer(() => {
 
    const { user } = useContext(Context)
    useEffect(() => {
+
       if (params.id) {
          deviceAPI.getOneDevice(params.id)
             .then(data => setDevice(data))
@@ -88,17 +90,27 @@ const DevicePage: React.FC = observer(() => {
    }, [params])
 
    useEffect(() => {
-      if (device?.id) {
-         setIsInBasket(user.basketDevices.includes(device.id))
+      if (device?._id) {
+         // setIsInBasket(user.basketDevices.includes(Number(device._id)))
+         //to change button (add/remove)
+         user.basketDevices.forEach(basketDevice => {
+            if (basketDevice._id === device._id) {
+               setIsInBasket(true)
+            } else {
+               setIsInBasket(false)
+            }
+         })
       }
-   }, [device?.id, user.basketDevices])
+   }, [device?._id, user.basketDevices])
 
    const addToBasket = async () => {
       if (user.user) {
          setIsAdding(true)
-         const deviceId = Number(params.id)
-         const basketId = user.user?.id
-         await userAPI.addDeviceToBasket(basketId, deviceId)
+         const deviceId = params.id
+         const userId = user.user?.id
+         if (deviceId && userId) {
+            await userAPI.addDeviceToBasket(userId, deviceId)
+         }
          setIsAdding(false)
          user.setBasketDevicesCount(user.basketDevicesCount + 1)
       } else {
@@ -108,7 +120,8 @@ const DevicePage: React.FC = observer(() => {
 
    const { remove: removeDevice, isRemoving } = useRemoveDevice()
 
-   const imgUrl = device?.img ? `${process.env.REACT_APP_API_URL}${device?.img}` : 'https://www.salonlfc.com/wp-content/uploads/2018/01/image-not-found-1-scaled.png'
+   // const src = device?.img ? `${process.env.REACT_APP_API_URL}${device?.img}` : 'https://www.salonlfc.com/wp-content/uploads/2018/01/image-not-found-1-scaled.png'
+   const src = checkSrc(device?.img)
 
    if (isFetching) {
       return <CircleLoader />
@@ -128,7 +141,7 @@ const DevicePage: React.FC = observer(() => {
 
             <div className={classes.imgCont}>
                <img
-                  src={imgUrl}
+                  src={src}
                   alt={device?.name}
                   style={{ height: '100%', objectFit: 'contain' }}
                   className={classes.img}
@@ -162,7 +175,7 @@ const DevicePage: React.FC = observer(() => {
                <Button
                   variant="contained"
                   color='secondary'
-                  onClick={() => device && removeDevice(device.id)}
+                  onClick={() => device && removeDevice(device._id)}
                   disabled={isRemoving}
                >
                   Remove
@@ -179,7 +192,7 @@ const DevicePage: React.FC = observer(() => {
          </Typography>
          <Card style={{ marginTop: 25 }}>
             {device?.info.map((info) => (
-               <Typography className={`${classes.descrItem} ${classes.text}`} key={Date.now() + Math.random()}>{info.title}: {info.description}</Typography>
+               <Typography className={`${classes.descrItem} ${classes.text}`} key={Date.now() + Math.random()}>{info.title}: {info.descriptions}</Typography>
             ))}
          </Card>
       </>

@@ -7,36 +7,38 @@ export interface IUser {
 }
 
 export interface IType {
-  id: number
+  _id: number
   name: string
 }
 
 export interface IBrand {
-  id: number
+  _id: number
   name: string
 }
 
 type DeviceInfo = {
-  id: number
-  deviceId: number
-  description: string
+  _id: number
+  // deviceId: number
+  descriptions: string
   title: string
 }
 
 export interface IDevice {
-  id: number
+  _id: string
   name: string
   price: number
   rating: number
   img: string
-  brandId: number
-  typeId: number
+  brandId: string
+  typeId: string
   info: Array<DeviceInfo>
 }
 
-export interface IBasket {
-  id: number
-  basketId: number
-  device: IDevice
-  deviceId: number
-}
+// export interface IBasket {
+//   _id: number
+//   basketId: number
+//   device: IDevice
+//   deviceId: number
+// }
+
+export type IBasket = IDevice[]

@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme: Theme) =>
    }),
 );
 
-type Item = { id: number, name: string }
+type Item = { _id: number, name: string }
 type Props = {
    name: string
    items: Array<Item>
@@ -35,7 +35,7 @@ const CategoryList: React.FC<Props> = observer(({ name, items, setSlectCategoty,
 
    const handleSelect = (item: Item | null) => {
 
-      if (item?.id === selectedItem?.id) {
+      if (item?._id === selectedItem?._id) {
          setSlectCategoty(null)
       }
       else {
@@ -52,9 +52,9 @@ const CategoryList: React.FC<Props> = observer(({ name, items, setSlectCategoty,
          <List component="div" disablePadding>
             {items.map(item => (
                <ListItem button
-                  className={classes.nested} key={item.name + item.id}
+                  className={classes.nested} key={item.name + item._id}
                   onClick={() => handleSelect(item)}
-                  style={selectedItem && selectedItem.id === item.id ? { background: '#3b8ad9', color: 'white' } : {}}>
+                  style={selectedItem && selectedItem._id === item._id ? { background: '#3b8ad9', color: 'white' } : {}}>
                   <ListItemText primary={item.name} />
                </ListItem>
             ))}

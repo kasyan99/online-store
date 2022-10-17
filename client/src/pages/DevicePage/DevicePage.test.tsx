@@ -1,9 +1,5 @@
-import { render, screen } from "@testing-library/react"
-import DevicePage from "./DevicePage"
 import { $host } from "../../api/index";
 import { deviceAPI } from "../../api/deviceAPI";
-
-
 
 describe("get device test", () => {
 
@@ -19,18 +15,6 @@ describe("get device test", () => {
 
   it("should to be called 1 times and response result", async () => {
 
-    // const req: any = {
-    //   params: {
-    //     id: 1
-    //   }
-    // };
-    // const res: any = {
-    //   status: () => {
-    //     return {
-    //       json: jest.fn()
-    //     }
-    //   },
-    // };
     const result = {
       status: 200,
       data: {
